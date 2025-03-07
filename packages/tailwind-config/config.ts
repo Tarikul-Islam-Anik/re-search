@@ -10,9 +10,9 @@ export const config: Config = {
     './node_modules/@repo/design-system/components/**/*.{ts,tsx}',
     './node_modules/@repo/design-system/lib/**/*.{ts,tsx}',
     './node_modules/@repo/design-system/index.tsx',
-    './components/**/*.{ts,tsx}',
+    './src/components/**/*.{ts,tsx}',
     './lib/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
+    './src/app/**/*.{ts,tsx}',
     './providers/**/*.{ts,tsx}',
   ],
   theme: {

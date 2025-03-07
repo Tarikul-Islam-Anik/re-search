@@ -1,3 +1,5 @@
+import './styles/globals.css';
+
 import { AnalyticsProvider } from '@repo/analytics';
 import { AuthProvider } from '@repo/auth/provider';
 import type { ThemeProviderProps } from 'next-themes';
