@@ -108,12 +108,12 @@
   select:-webkit-autofill,
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus {
-    border: 1px solid hsl(215 27.9% 16.9%);
-    -webkit-text-fill-color: hsl(210 20% 98%);
-    -webkit-box-shadow: 0 0 0px 1000px hsl(224 71.4% 4.1%) inset;
-    box-shadow: 0 0 0px 1000px hsl(224 71.4% 4.1%) inset;
+    /* border: 1px solid var(--border); */
+    -webkit-text-fill-color: var(--foreground);
+    -webkit-box-shadow: 0 0 0px 1000px var(--background) inset;
+    box-shadow: 0 0 0px 1000px var(--background) inset;
     transition: background-color 5000s ease-in-out 0s;
-    color: hsl(210 20% 98%);
+    color: var(--foreground);
   }
 
   ::-webkit-scrollbar {
