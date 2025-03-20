@@ -5,3 +5,11 @@ model VerificationToken {
 
   @@id([identifier, token])
 }
+
+model EmailVerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}

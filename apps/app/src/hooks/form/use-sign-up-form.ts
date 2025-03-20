@@ -1,7 +1,11 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+'use client';
 
+import { handleApiError } from '@/lib/axios-error-handle';
 import { type SignUpSchema, signUpSchema } from '@/schemas/sign-up-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 export function useSignUpForm() {
   const form = useForm<SignUpSchema>({
@@ -14,7 +18,21 @@ export function useSignUpForm() {
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
-    console.log(values);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/user/create`,
+        values
+      );
+
+      if (response.status === 201) {
+        toast.success('Account created successfully');
+      } else {
+        const message = response.data?.message || 'Unknown error';
+        toast.error(`Failed to create account: ${message}`);
+      }
+    } catch (error) {
+      handleApiError(error);
+    }
   });
 
   const isLoading = form.formState.isSubmitting;
