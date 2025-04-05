@@ -1,0 +1,16 @@
+model Journal {
+  id        String   @id @default(cuid())
+  title     String?
+  content   String
+  mood      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  files      File[]
+  references Citation[]
+  links      Link[]
+
+  vaultId String
+  vault   Vault  @relation(fields: [vaultId], references: [id])
+}

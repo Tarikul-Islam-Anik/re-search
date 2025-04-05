@@ -1,0 +1,6 @@
+model Author {
+  id          String  @id @default(cuid())
+  name        String
+  affiliation String?
+  papers      Paper[] @relation("PaperAuthors")
+}

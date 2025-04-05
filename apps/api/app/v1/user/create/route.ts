@@ -1,8 +1,10 @@
 'use server';
 
 import { database } from '@repo/database';
+import { resend } from '@repo/email';
+import { VerifyEmail } from '@repo/email/templates/verify-email';
 import { hash } from 'bcryptjs';
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -15,8 +17,8 @@ const generateVerificationToken = () => {
   return crypto.randomUUID().split('-')[2];
 };
 
-export async function POST(req: Request) {
-  const body = await req.json();
+export async function POST(request: NextRequest) {
+  const body = await request.json();
   const { name, email, password } = schema.parse(body);
 
   const hashedPassword = await hash(password, 10);
@@ -45,12 +47,12 @@ export async function POST(req: Request) {
     },
   });
 
-  // await resend.emails.send({
-  //   from: 'noreply@re-search.com',
-  //   to: email,
-  //   subject: 'Verify your email',
-  //   react: VerifyEmail({ validationCode: emailVerificationToken.token }),
-  // });
+  await resend.emails.send({
+    from: 'noreply@re-search.com',
+    to: email,
+    subject: 'Verify your email',
+    react: VerifyEmail({ validationCode: emailVerificationToken.token }),
+  });
 
   return NextResponse.json(
     {

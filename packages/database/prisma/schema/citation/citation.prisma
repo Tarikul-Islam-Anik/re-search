@@ -1,0 +1,23 @@
+model Citation {
+  id        String  @id @default(cuid())
+  title     String
+  author    String
+  year      Int?
+  publisher String?
+  journal   String?
+  volume    String?
+  issue     String?
+  pages     String?
+  doi       String?
+  url       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  vaultId String?
+  vault   Vault?  @relation(fields: [vaultId], references: [id])
+
+  journalEntryId String?
+  journalEntry   Journal? @relation(fields: [journalEntryId], references: [id])
+}

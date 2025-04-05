@@ -1,0 +1,16 @@
+model Vault {
+  id          String  @id @default(uuid())
+  name        String
+  description String
+  icon        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  files     File[]
+  citations Citation[]
+  journals  Journal[]
+}

@@ -1,0 +1,17 @@
+model Paper {
+  id              String    @id @default(cuid())
+  title           String
+  abstract        String?
+  publicationDate DateTime?
+  doi             String?   @unique
+  journal         String?
+  volume          String?
+  issue           String?
+  pages           String?
+
+  keywords String[]
+  authors  Author[] @relation("PaperAuthors")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
