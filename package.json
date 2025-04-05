@@ -12,6 +12,7 @@
     "dev:app": "turbo dev --filter=app",
     "dev:api": "turbo dev --filter=api",
     "dev:email": "turbo dev --filter=email",
+    "dev:studio": "turbo dev --filter=studio",
     "lint": "ultracite lint",
     "format": "ultracite format",
     "test": "turbo test",
