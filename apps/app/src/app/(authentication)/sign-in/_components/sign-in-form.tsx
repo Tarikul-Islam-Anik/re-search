@@ -26,7 +26,7 @@ export function SignInForm() {
           <div className="flex flex-col items-center text-center">
             <h1 className="font-bold text-2xl">Welcome back</h1>
             <p className="text-balance text-muted-foreground">
-              Login to your Keyport account
+              Login to your Re:Search account
             </p>
           </div>
           <FormField

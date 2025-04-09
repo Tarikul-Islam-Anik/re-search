@@ -1,12 +1,20 @@
+import { auth } from '@repo/auth';
 import { Card, CardContent } from '@repo/design-system/components/ui/card';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import type React from 'react';
 
-const AuthenticationPageLayout = ({
+const AuthenticationPageLayout = async ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
+  const session = await auth();
+
+  if (session) {
+    redirect('/');
+  }
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
       <div className="w-full max-w-sm md:max-w-3xl">
