@@ -1,5 +1,5 @@
 'use client';
-import type { User } from '@repo/database';
+import type { Subscription, User } from '@repo/database';
 import type { Table } from '@tanstack/react-table';
 import type React from 'react';
 import { DeleteSelectedAlert } from './delete-selected-alert';
@@ -9,7 +9,9 @@ import { ViewColumns } from './filters/view-columns';
 
 interface TableFiltersProps {
   id: string;
-  table: Table<User>;
+  table: Table<
+    User & { subscription: Subscription; _count: { vaults: number } }
+  >;
   inputRef: React.RefObject<HTMLInputElement | null>;
   isLoading: boolean;
   error: Error | null;

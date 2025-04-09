@@ -7,6 +7,11 @@
   "files": ["dist/index.js"],
   "scripts": {
     "build": "turbo build",
+    "build:web": "turbo build --filter=web",
+    "build:app": "turbo build --filter=app",
+    "build:api": "turbo build --filter=api",
+    "build:email": "turbo build --filter=email",
+    "build:studio": "turbo build --filter=studio",
     "dev": "turbo dev",
     "dev:web": "turbo dev --filter=web",
     "dev:app": "turbo dev --filter=app",

@@ -1,6 +1,6 @@
 'use client';
 
-import type { User } from '@repo/database';
+import type { Subscription, User } from '@repo/database';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   DropdownMenu,
@@ -13,7 +13,9 @@ import type { Table } from '@tanstack/react-table';
 import { Columns3 } from 'lucide-react';
 
 interface ViewColumnsProps {
-  table: Table<User>;
+  table: Table<
+    User & { subscription: Subscription; _count: { vaults: number } }
+  >;
 }
 
 export function ViewColumns({ table }: ViewColumnsProps) {

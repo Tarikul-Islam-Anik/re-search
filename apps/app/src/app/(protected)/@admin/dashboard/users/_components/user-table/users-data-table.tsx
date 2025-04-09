@@ -1,5 +1,5 @@
 'use client';
-import type { User } from '@repo/database';
+import type { Subscription, User } from '@repo/database';
 import {
   Table,
   TableBody,
@@ -29,7 +29,7 @@ import TablePagination from './table-pagination';
 import { TableSkeleton } from './table-skeleton';
 
 interface UsersDataTableProps {
-  data: User[];
+  data: (User & { subscription: Subscription; _count: { vaults: number } })[];
   isLoading: boolean;
   error: Error | null;
 }

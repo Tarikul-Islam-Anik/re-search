@@ -1,6 +1,6 @@
 'use client';
 
-import type { User } from '@repo/database';
+import type { Subscription, User } from '@repo/database';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Checkbox } from '@repo/design-system/components/ui/checkbox';
 import { Label } from '@repo/design-system/components/ui/label';
@@ -15,7 +15,9 @@ import { useMemo } from 'react';
 
 interface StatusFilterProps {
   id: string;
-  table: Table<User>;
+  table: Table<
+    User & { subscription: Subscription; _count: { vaults: number } }
+  >;
   isLoading: boolean;
   error: Error | null;
 }

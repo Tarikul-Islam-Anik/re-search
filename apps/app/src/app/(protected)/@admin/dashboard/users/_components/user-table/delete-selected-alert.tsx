@@ -1,7 +1,7 @@
 'use client';
 
 import { useGetManyUsers } from '@/hooks/query/user/use-get-many-users';
-import type { User } from '@repo/database';
+import type { Subscription, User } from '@repo/database';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +19,9 @@ import axios from 'axios';
 import { CircleAlert, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 interface DeleteSelectedDialogProps {
-  table: Table<User>;
+  table: Table<
+    User & { subscription: Subscription; _count: { vaults: number } }
+  >;
 }
 
 export function DeleteSelectedAlert({ table }: DeleteSelectedDialogProps) {

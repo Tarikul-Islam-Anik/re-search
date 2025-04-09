@@ -1,6 +1,6 @@
 'use client';
 
-import type { User } from '@repo/database';
+import type { Subscription, User } from '@repo/database';
 import { Input } from '@repo/design-system/components/ui/input';
 import { cn } from '@repo/design-system/lib/utils';
 import type { Table } from '@tanstack/react-table';
@@ -9,7 +9,9 @@ import type React from 'react';
 
 interface SearchFilterProps {
   id: string;
-  table: Table<User>;
+  table: Table<
+    User & { subscription: Subscription; _count: { vaults: number } }
+  >;
   inputRef: React.RefObject<HTMLInputElement | null>;
   isLoading: boolean;
   error: Error | null;
