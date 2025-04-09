@@ -28,7 +28,7 @@ export function useSignUpForm() {
 
       if (response.status === 201) {
         toast.success('Account created successfully');
-        router.push('/login');
+        router.push('/sign-in');
       } else {
         const message = response.data?.message || 'Unknown error';
         toast.error(`Failed to create account: ${message}`);

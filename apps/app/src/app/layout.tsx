@@ -1,4 +1,5 @@
 import '@repo/design-system/styles/globals.css';
+import { ReactQueryProvider } from '@/context/react-query-provider';
 import { DesignSystemProvider } from '@repo/design-system';
 import TailwindIndicator from '@repo/design-system/components/shared/tailwind-indicator';
 import { fonts } from '@repo/design-system/lib/fonts';
@@ -12,9 +13,11 @@ type RootLayoutProperties = {
 const RootLayout = ({ children }: RootLayoutProperties) => (
   <html lang="en" className={fonts} suppressHydrationWarning>
     <body>
-      <DesignSystemProvider>{children}</DesignSystemProvider>
-      <Toolbar />
-      <TailwindIndicator />
+      <ReactQueryProvider>
+        <DesignSystemProvider>{children}</DesignSystemProvider>
+        <Toolbar />
+        <TailwindIndicator />
+      </ReactQueryProvider>
     </body>
   </html>
 );
