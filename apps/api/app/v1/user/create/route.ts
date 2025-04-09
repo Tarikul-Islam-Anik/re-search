@@ -35,8 +35,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  await database.user.create({
+  const newUser = await database.user.create({
     data: { name, email, password: hashedPassword },
+  });
+
+  await database.subscription.create({
+    data: {
+      userId: newUser.id,
+      plan: 'STUDENT',
+      status: 'ACTIVE',
+    },
   });
 
   // const emailVerificationToken = await database.verificationToken.create({
