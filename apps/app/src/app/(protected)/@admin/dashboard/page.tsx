@@ -1,5 +1,7 @@
+import { redirect } from 'next/navigation';
+
 const AdminDashboardPage = () => {
-  return <div>AdminDashboardPage</div>;
+  return redirect('/dashboard/overview');
 };
 
 export default AdminDashboardPage;

@@ -48,10 +48,6 @@ export function NavMain() {
           title: 'All Users',
           url: 'users',
         },
-        {
-          title: 'Create User',
-          url: '#',
-        },
       ],
     },
   ];

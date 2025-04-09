@@ -29,7 +29,7 @@ export async function RecentUsers() {
     orderBy: {
       createdAt: 'desc',
     },
-    take: 5,
+    take: 7,
   });
 
   return (

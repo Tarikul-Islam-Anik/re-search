@@ -7,7 +7,8 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { auth } from '@repo/auth';
+import { auth, signOut } from '@repo/auth';
+import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import {
   Avatar,
   AvatarFallback,
@@ -89,6 +90,8 @@ export async function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
+            <ModeToggle />
+            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
@@ -104,10 +107,19 @@ export async function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <form
+              action={async () => {
+                'use server';
+                await signOut();
+              }}
+            >
+              <DropdownMenuItem asChild>
+                <button type="submit" className="w-full">
+                  <LogOut />
+                  Log out
+                </button>
+              </DropdownMenuItem>
+            </form>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

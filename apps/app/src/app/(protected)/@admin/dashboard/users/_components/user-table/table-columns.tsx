@@ -1,4 +1,4 @@
-import type { User } from '@repo/database';
+import type { Subscription, User } from '@repo/database';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Checkbox } from '@repo/design-system/components/ui/checkbox';
 import { cn } from '@repo/design-system/lib/utils';
@@ -7,7 +7,9 @@ import { format } from 'date-fns';
 import { RowActions } from './row-actions';
 import { multiColumnFilterFn, statusFilterFn } from './table-filters-functions';
 
-export const usersColumns: ColumnDef<User>[] = [
+export const usersColumns: ColumnDef<
+  User & { subscription: Subscription; _count: { vaults: number } }
+>[] = [
   {
     id: 'select',
     header: ({ table }) => {
@@ -50,15 +52,37 @@ export const usersColumns: ColumnDef<User>[] = [
     size: 220,
   },
   {
-    header: 'Phone Number',
-    accessorKey: 'phoneNumber',
+    header: 'Plan',
+    accessorKey: 'subscription.plan',
     cell: ({ row }) => {
-      const phoneNumber = row.getValue('phoneNumber') as string;
+      const plan = row.original.subscription.plan;
       return (
-        <div className="text-muted-foreground">{phoneNumber || 'N/A'}</div>
+        <div className="text-muted-foreground capitalize">{plan || 'N/A'}</div>
       );
     },
     size: 120,
+  },
+  {
+    header: 'Status',
+    accessorKey: 'subscription.status',
+    cell: ({ row }) => {
+      const status = row.original.subscription.status;
+      return (
+        <Badge
+          className={cn('capitalize', {
+            'bg-green-500 dark:bg-green-600': status === 'ACTIVE',
+            'bg-red-500 dark:bg-red-600': status === 'INACTIVE',
+            'bg-yellow-500 dark:bg-yellow-600': status === 'TRIAL',
+            'bg-gray-500 dark:bg-gray-600':
+              status === 'EXPIRED' || status === 'CANCELLED',
+          })}
+        >
+          {status}
+        </Badge>
+      );
+    },
+    size: 100,
+    filterFn: statusFilterFn,
   },
   {
     header: 'Role',
@@ -72,25 +96,7 @@ export const usersColumns: ColumnDef<User>[] = [
     ),
     size: 100,
   },
-  {
-    header: 'Beta Access',
-    accessorKey: 'betaAccess',
-    cell: ({ row }) => {
-      const betaAccess = row.getValue('betaAccess');
-      return (
-        <Badge
-          className={cn(
-            Boolean(!betaAccess) &&
-              'bg-muted-foreground/60 text-primary-foreground'
-          )}
-        >
-          {betaAccess ? 'Yes' : 'No'}
-        </Badge>
-      );
-    },
-    size: 100,
-    filterFn: statusFilterFn,
-  },
+
   {
     header: 'Joined',
     accessorKey: 'createdAt',
