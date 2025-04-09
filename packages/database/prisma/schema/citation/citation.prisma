@@ -16,8 +16,8 @@ model Citation {
 
   // Relations
   vaultId String?
-  vault   Vault?  @relation(fields: [vaultId], references: [id])
+  vault   Vault?  @relation(fields: [vaultId], references: [id], onDelete: Cascade)
 
   journalEntryId String?
-  journalEntry   Journal? @relation(fields: [journalEntryId], references: [id])
+  journalEntry   Journal? @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
 }

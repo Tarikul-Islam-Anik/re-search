@@ -9,7 +9,7 @@ model Vault {
 
   // Relations
   userId    String
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   files     File[]
   citations Citation[]
   journals  Journal[]

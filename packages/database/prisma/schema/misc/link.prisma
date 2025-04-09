@@ -5,6 +5,6 @@ model Link {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  journal   Journal @relation(fields: [journalId], references: [id])
+  journal   Journal @relation(fields: [journalId], references: [id], onDelete: Cascade)
   journalId String
 }
