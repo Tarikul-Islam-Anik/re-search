@@ -2,6 +2,7 @@ model User {
   id    String  @id @default(cuid())
   name  String?
   image String?
+  role  String? @default("user")
 
   email         String    @unique
   emailVerified DateTime?

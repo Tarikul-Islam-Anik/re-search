@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@keyport/design-system/lib/utils';
+import { cn } from '@repo/design-system/lib/utils';
 import { OTPInput as OTPInputComponent, type SlotProps } from 'input-otp';
 import { Minus } from 'lucide-react';
 
