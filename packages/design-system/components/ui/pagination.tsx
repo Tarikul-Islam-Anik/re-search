@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cn } from "@repo/design-system/lib/utils"
-import { ButtonProps, buttonVariants } from "@repo/design-system/components/ui/button"
+import { buttonVariants } from "@repo/design-system/components/ui/button"
+import { type VariantProps } from "class-variance-authority"
 import { ChevronLeftIcon, ChevronRightIcon, DotsHorizontalIcon } from "@radix-ui/react-icons"
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
@@ -35,7 +36,7 @@ PaginationItem.displayName = "PaginationItem"
 
 type PaginationLinkProps = {
   isActive?: boolean
-} & Pick<ButtonProps, "size"> &
+} & Pick<VariantProps<typeof buttonVariants>, "size"> &
   React.ComponentProps<"a">
 
 const PaginationLink = ({

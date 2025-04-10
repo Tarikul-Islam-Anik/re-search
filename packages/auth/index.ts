@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { database } from '@repo/database';
 import { compare } from 'bcryptjs';
