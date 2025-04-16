@@ -1,4 +1,4 @@
-model Citation {
+model Reference {
   id        String  @id @default(cuid())
   title     String
   author    String

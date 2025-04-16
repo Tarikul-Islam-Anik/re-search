@@ -8,9 +8,9 @@ model Vault {
   updatedAt DateTime @updatedAt
 
   // Relations
-  userId    String
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  files     File[]
-  citations Citation[]
-  journals  Journal[]
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files      File[]
+  references Reference[]
+  journals   Journal[]
 }

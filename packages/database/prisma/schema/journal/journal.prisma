@@ -8,7 +8,7 @@ model Journal {
 
   // Relationships
   files      File[]
-  references Citation[]
+  references Reference[]
   links      Link[]
 
   vaultId String
