@@ -101,8 +101,8 @@ export function NavApp() {
           url: 'mermaid',
         },
         {
-          title: 'Excalidraw',
-          url: 'excalidraw',
+          title: 'TLDraw',
+          url: 'tldraw',
         },
       ],
     },
