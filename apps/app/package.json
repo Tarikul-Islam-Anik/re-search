@@ -37,6 +37,7 @@
     "import-in-the-middle": "^1.13.1",
     "katex": "^0.16.22",
     "lucide-react": "^0.477.0",
+    "mermaid": "^11.6.0",
     "next": "15.1.7",
     "next-themes": "^0.4.4",
     "react": "19.0.0",

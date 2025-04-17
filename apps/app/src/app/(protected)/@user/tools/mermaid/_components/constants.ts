@@ -1,0 +1,7 @@
+export const defaultMermaidCode = `graph TD;
+    A["Start"] --> B["Process"];
+    B --> C["Decision"];
+    C -->|"Yes"| D["Action 1"];
+    C -->|"No"| E["Action 2"];
+    D --> F["End"];
+    E --> F;`;
