@@ -20,6 +20,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         // @ts-expect-error
         token.role = user.role;
+        // @ts-expect-error
+        token.id = user.id;
       }
       return token;
     },
@@ -28,6 +30,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         // @ts-expect-error
         session.user.role = token.role;
+        // @ts-expect-error
+        session.user.id = token.id;
       }
       return session;
     },
