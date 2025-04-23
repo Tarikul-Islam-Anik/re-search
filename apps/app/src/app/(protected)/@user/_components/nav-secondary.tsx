@@ -21,7 +21,7 @@ export function NavSecondary() {
     },
   ];
   return (
-    <SidebarGroup>
+    <SidebarGroup className="p-0">
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (

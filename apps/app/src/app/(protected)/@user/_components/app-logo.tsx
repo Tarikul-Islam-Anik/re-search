@@ -1,10 +1,16 @@
+'use client';
+
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@repo/design-system/components/ui/sidebar';
+import { cn } from '@repo/design-system/lib/utils';
 
 export function AppLogo() {
+  const { state } = useSidebar();
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -25,7 +31,11 @@ export function AppLogo() {
               />
             </svg>
           </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
+          <div
+            className={cn('grid flex-1 text-left text-sm leading-tight', {
+              hidden: state === 'collapsed',
+            })}
+          >
             <span className="truncate font-semibold">Re:Search</span>
             <span className="truncate text-xs">Admin</span>
           </div>
