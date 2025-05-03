@@ -12,6 +12,19 @@ export async function GET(
   }
 
   try {
+    const vault = await database.vault.findFirst({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    if (!vault) {
+      return NextResponse.json({ error: 'No vaults found' }, { status: 404 });
+    }
+    const vaultId = vault.id;
+
     const vaultCount = await database.vault.count({
       where: {
         userId,
@@ -19,6 +32,7 @@ export async function GET(
     });
 
     return NextResponse.json({
+      vaultId,
       hasVaults: vaultCount > 0,
       vaultCount,
     });

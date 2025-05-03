@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 interface CheckVaultsResponse {
+  vaultId: string;
   hasVaults: boolean;
   vaultCount: number;
 }
