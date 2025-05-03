@@ -7,7 +7,6 @@ interface User {
   image: string | null;
   role: string;
   email: string;
-  totalVaults: number;
 }
 
 interface UserState {
