@@ -13,7 +13,7 @@ const referenceSchema = z.object({
   pages: z.string().trim().optional(),
   doi: z.string().trim().optional(),
   url: z.string().trim().url().optional(),
-  vaultId: z.string().optional(),
+  vaultId: z.string(),
 });
 
 export async function GET(request: NextRequest) {

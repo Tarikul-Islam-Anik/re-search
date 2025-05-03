@@ -8,11 +8,13 @@ import {
   SectionHeader,
   SectionTitle,
 } from '@/components/section';
+import { useCheckUserVaults } from '@/hooks/query/user/use-check-user-vaults';
 import {
   type ReferenceFormValues,
   referenceSchema,
 } from '@/schemas/reference-schema';
 import { useReferenceStore } from '@/store/use-reference-store';
+import { useUserStore } from '@/store/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Alert,
@@ -39,6 +41,8 @@ import { createReference } from './reference-action';
 export function ManualEntryForm() {
   const reference = useReferenceStore((state) => state.reference);
   const resetReference = useReferenceStore((state) => state.resetReference);
+  const user = useUserStore((state) => state.user);
+  const { data } = useCheckUserVaults(user?.id);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -46,7 +50,6 @@ export function ManualEntryForm() {
   const form = useForm<ReferenceFormValues>({
     resolver: zodResolver(referenceSchema),
     defaultValues: {
-      id: '',
       doi: '',
       title: '',
       authors: '',
@@ -65,7 +68,6 @@ export function ManualEntryForm() {
     if (reference.title) {
       form.reset({
         // We don't include id since it's usually generated on the server
-        id: reference.id || '',
         doi: reference.doi || '',
         title: reference.title || '',
         authors: reference.authors || '',
@@ -76,6 +78,7 @@ export function ManualEntryForm() {
         pages: reference.pages || '',
         url: reference.url || '',
       });
+      form.clearErrors(); // Clear any previous errors
     }
   }, [reference, form]);
 
@@ -88,15 +91,15 @@ export function ManualEntryForm() {
       // Add a temporary id which will be replaced by the server
       await createReference({
         ...data,
-        id: data.id || 'temp-id', // Provide a temporary ID that will be replaced on the server
+        vaultId: data.vaultId,
       });
 
       // Reset the form and the reference store
       form.reset();
       resetReference();
 
-      // Navigate to references list
-      router.push('/references');
+      // Navigate to references management page
+      router.push('/references/manage');
       router.refresh();
     } catch (err) {
       setError(

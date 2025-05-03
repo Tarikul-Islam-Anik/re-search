@@ -5,7 +5,6 @@ export const doiPattern = /^10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
 const replacePattern = /^https?:\/\/doi.org\//i;
 
 export const referenceSchema = z.object({
-  id: z.string(),
   doi: z
     .string()
     .trim()
@@ -34,6 +33,7 @@ export const referenceSchema = z.object({
     .url({ message: 'Must be a valid URL' })
     .optional()
     .or(z.literal('')),
+  vaultId: z.string().min(1, { message: 'Vault ID is required' }),
 });
 
 export const doiInputSchema = z.object({

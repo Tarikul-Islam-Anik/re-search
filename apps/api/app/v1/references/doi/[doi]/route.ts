@@ -34,18 +34,16 @@ export async function GET(
   { params }: { params: { doi: string } }
 ) {
   try {
+    // The DOI parameter will be URL-encoded from the client
     const encodedDoi = params.doi;
+    // Make sure to fully decode the DOI which may have been doubly encoded
+    // to preserve URL characters like slashes
     const doi = decodeURIComponent(encodedDoi);
     const cleanDoi = extractDoi(doi);
 
     // Use CrossRef API to fetch reference data
     const response = await axios.get(
-      `https://api.crossref.org/works/${cleanDoi}`,
-      {
-        headers: {
-          'User-Agent': 'ReSearch/1.0 (mailto:support@research-app.com)',
-        },
-      }
+      `https://api.crossref.org/works/${cleanDoi}`
     );
 
     const data = response.data.message;
