@@ -34,10 +34,26 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { fetchReferenceByDoi } from './reference-action';
 
+// Define a type for the API response
+type ReferenceApiResponse = {
+  id?: string;
+  doi?: string;
+  title?: string;
+  authors?: string;
+  journal?: string;
+  year?: string;
+  volume?: string;
+  issue?: string;
+  pages?: string;
+  url?: string;
+  [key: string]: unknown;
+};
+
 export function DoiInput() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const setReference = useReferenceStore((state) => state.setReference);
+  const resetReference = useReferenceStore((state) => state.resetReference);
 
   const form = useForm<DoiInputFormValues>({
     resolver: zodResolver(doiInputSchema),
@@ -46,20 +62,48 @@ export function DoiInput() {
     },
   });
 
+  // Format reference data with proper typing
+  const formatReferenceData = (data: ReferenceApiResponse) => {
+    return {
+      doi: data.doi || '',
+      title: data.title || '',
+      authors: data.authors || '',
+      journal: data.journal || '',
+      year: data.year || '',
+      volume: data.volume || '',
+      issue: data.issue || '',
+      pages: data.pages || '',
+      url: data.url || '',
+      ...(data.id ? { id: data.id } : {}),
+    };
+  };
+
   const handleSubmit = async (values: DoiInputFormValues) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const reference = await fetchReferenceByDoi(values.doi);
-      setReference(reference);
-      setIsLoading(false);
+      // Extract reference data from API call
+      const referenceData = await fetchReferenceByDoi(values.doi);
+
+      // Format and update the reference store
+      setReference(formatReferenceData(referenceData));
+
+      // Reset form
+      form.reset();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to fetch reference data'
       );
+    } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleReset = () => {
+    form.reset();
+    resetReference();
+    setError(null);
   };
 
   return (
@@ -108,20 +152,31 @@ export function DoiInput() {
                 </Alert>
               )}
 
-              <Button
-                onClick={form.handleSubmit(handleSubmit)}
-                disabled={isLoading || !form.formState.isValid}
-                className="mt-4 w-full"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="animate-spin" />
-                    Fetching...
-                  </>
-                ) : (
-                  'get Reference'
-                )}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  disabled={isLoading || !form.formState.isValid}
+                  className="flex-1"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Fetching...
+                    </>
+                  ) : (
+                    'Get Reference'
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleReset}
+                  disabled={isLoading}
+                >
+                  Reset
+                </Button>
+              </div>
             </form>
           </Form>
         </SectionContent>

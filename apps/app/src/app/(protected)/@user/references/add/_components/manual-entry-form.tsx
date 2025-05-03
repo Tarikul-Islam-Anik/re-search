@@ -14,6 +14,10 @@ import {
 } from '@/schemas/reference-schema';
 import { useReferenceStore } from '@/store/use-reference-store';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Alert,
+  AlertDescription,
+} from '@repo/design-system/components/ui/alert';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   Form,
@@ -25,11 +29,19 @@ import {
   FormMessage,
 } from '@repo/design-system/components/ui/form';
 import { Input } from '@repo/design-system/components/ui/input';
-import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { createReference } from './reference-action';
 
 export function ManualEntryForm() {
   const reference = useReferenceStore((state) => state.reference);
+  const resetReference = useReferenceStore((state) => state.resetReference);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const form = useForm<ReferenceFormValues>({
     resolver: zodResolver(referenceSchema),
@@ -67,9 +79,31 @@ export function ManualEntryForm() {
     }
   }, [reference, form]);
 
-  const onSubmit = (data: ReferenceFormValues) => {
-    console.log('Form submitted:', data);
-    // Here you would typically save the reference data
+  const onSubmit = async (data: ReferenceFormValues) => {
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Create a copy without modifying the original data
+      // Add a temporary id which will be replaced by the server
+      await createReference({
+        ...data,
+        id: data.id || 'temp-id', // Provide a temporary ID that will be replaced on the server
+      });
+
+      // Reset the form and the reference store
+      form.reset();
+      resetReference();
+
+      // Navigate to references list
+      router.push('/references');
+      router.refresh();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to create reference'
+      );
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -252,9 +286,27 @@ export function ManualEntryForm() {
                   />
                 </div>
 
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
                 <div className="mt-6 pt-4">
-                  <Button type="submit" className="w-full">
-                    Add Reference
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting || !form.formState.isDirty}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      'Add Reference'
+                    )}
                   </Button>
                 </div>
               </form>

@@ -1,8 +1,8 @@
 model Reference {
   id        String  @id @default(cuid())
   title     String
-  author    String
-  year      Int?
+  authors   String
+  year      String?
   publisher String?
   journal   String?
   volume    String?
