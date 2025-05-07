@@ -3,9 +3,9 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: Promise<string> } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const userId = await params.id;
+  const { id: userId } = await params;
 
   const user = await database.user.findUnique({
     where: {

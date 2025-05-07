@@ -31,14 +31,13 @@ function normalizeAuthors(authors: any[]): string {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { doi: string } }
+  { params }: { params: Promise<{ doi: string }> }
 ) {
   try {
     // The DOI parameter will be URL-encoded from the client
-    const encodedDoi = params.doi;
+    const { doi } = await params;
     // Make sure to fully decode the DOI which may have been doubly encoded
     // to preserve URL characters like slashes
-    const doi = decodeURIComponent(encodedDoi);
     const cleanDoi = extractDoi(doi);
 
     // Use CrossRef API to fetch reference data

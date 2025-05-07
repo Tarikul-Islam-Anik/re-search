@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
         pages: validatedData.pages,
         doi: validatedData.doi,
         url: validatedData.url,
-        ...(validatedData.vaultId && { vaultId: validatedData.vaultId }),
+        vaultId: validatedData.vaultId,
       },
     });
 

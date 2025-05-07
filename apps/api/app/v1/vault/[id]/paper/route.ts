@@ -5,9 +5,9 @@ import { z } from 'zod';
 // GET: Retrieve papers from a vault
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const vaultId = params.id;
+  const { id: vaultId } = await params;
   const url = new URL(request.url);
   const paperId = url.searchParams.get('paperId');
 
@@ -156,9 +156,9 @@ const paperUpdateSchema = z.object({
 // PUT: Update a specific paper
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const vaultId = params.id;
+  const { id: vaultId } = await params;
   const body = await request.json();
 
   // Extract paper ID from query parameters
@@ -276,9 +276,9 @@ export async function PUT(
 // DELETE: Delete a specific paper
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const vaultId = params.id;
+  const { id: vaultId } = await params;
   const url = new URL(request.url);
   const paperId = url.searchParams.get('paperId');
 

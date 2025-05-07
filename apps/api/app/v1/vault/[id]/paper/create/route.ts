@@ -20,9 +20,9 @@ const paperCreateSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const vaultId = params.id;
+  const { id: vaultId } = await params;
   const body = await request.json();
 
   const { data, success } = paperCreateSchema.safeParse(body);
