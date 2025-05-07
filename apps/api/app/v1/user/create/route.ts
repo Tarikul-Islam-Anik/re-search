@@ -17,6 +17,18 @@ const schema = z.object({
 //   return crypto.randomUUID().split('-')[2];
 // };
 
+export function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': 'https://re-search-app.vercel.app',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const { name, email, password } = schema.parse(body);
