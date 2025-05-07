@@ -143,19 +143,19 @@ export function PaperDetails() {
           <Tabs defaultValue="overview">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">
-                <FileText className="" />
+                <FileText className="mr-2 size-4 text-muted-foreground" />
                 Overview
               </TabsTrigger>
               <TabsTrigger value="authors">
-                <Users className="" />
+                <Users className="mr-2 size-4 text-muted-foreground" />
                 Authors
               </TabsTrigger>
               <TabsTrigger value="references">
-                <MessageSquare className="" />
+                <MessageSquare className="mr-2 size-4 text-muted-foreground" />
                 References
               </TabsTrigger>
               <TabsTrigger value="share">
-                <Share2 className="" />
+                <Share2 className="mr-2 size-4 text-muted-foreground" />
                 Share
               </TabsTrigger>
             </TabsList>
