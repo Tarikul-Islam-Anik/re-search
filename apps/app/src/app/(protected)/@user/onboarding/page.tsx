@@ -44,7 +44,7 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const user = useUserStore((state) => state.user);
-  const { refetch } = useCheckUserVaults(user?.id);
+  const { refetch } = useCheckUserVaults();
   const form = useForm<VaultFormValues>({
     resolver: zodResolver(vaultSchema),
     defaultValues: {

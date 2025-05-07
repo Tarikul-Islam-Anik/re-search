@@ -15,7 +15,7 @@ interface VaultCheckProps {
 export function VaultCheck({ userId, children }: VaultCheckProps) {
   const router = useRouter();
 
-  const { data, isLoading, error } = useCheckUserVaults(userId);
+  const { data, isLoading, error } = useCheckUserVaults();
 
   const hasData = !!data;
   const hasVaults = hasData && data.hasVaults;

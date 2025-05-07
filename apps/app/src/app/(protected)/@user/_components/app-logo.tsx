@@ -1,7 +1,6 @@
 'use client';
 
 import { useCheckUserVaults } from '@/hooks/query/user/use-check-user-vaults';
-import { useUserStore } from '@/store/user';
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -13,8 +12,7 @@ import { cn } from '@repo/design-system/lib/utils';
 
 export function AppLogo() {
   const { state } = useSidebar();
-  const user = useUserStore((state) => state.user);
-  const { data, isLoading } = useCheckUserVaults(user?.id);
+  const { data, isLoading } = useCheckUserVaults();
 
   return (
     <SidebarMenu>

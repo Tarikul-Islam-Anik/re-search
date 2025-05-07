@@ -10,7 +10,17 @@ export const usePDFJS = (
 
   // load the library once on mount (the webpack import automatically sets-up the worker)
   useEffect(() => {
-    import('pdfjs-dist/webpack.mjs').then(setPDFJS);
+    // Only load PDF.js on the client side
+    if (typeof window !== 'undefined') {
+      // Dynamically import pdfjs-dist
+      import('pdfjs-dist').then((importedPdfjs) => {
+        // Configure the worker
+        const pdfjsLib = importedPdfjs;
+        // Use blank worker to avoid dependency on worker file
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+        setPDFJS(pdfjsLib);
+      });
+    }
   }, []);
 
   // execute the callback function whenever PDFJS loads (or a custom dependency-array updates)
