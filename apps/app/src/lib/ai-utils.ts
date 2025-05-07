@@ -67,3 +67,43 @@ Please provide a helpful, accurate answer based on the document content.`,
     return "I'm sorry, I encountered an error while processing your question. Please try again.";
   }
 }
+
+/**
+ * Generates an insightful reflection on a journal entry, including emotional analysis,
+ * patterns recognition, and thoughtful suggestions
+ */
+export async function generateJournalReflection(
+  journalContent: string
+): Promise<string> {
+  try {
+    // Truncate text if it's too long to fit in the context window
+    const truncatedContent =
+      journalContent.length > 10000
+        ? `${journalContent.substring(0, 10000)}...`
+        : journalContent;
+
+    const { text: reflection } = await generateText({
+      model: openai('gpt-4o'),
+      system: `You are an empathetic and insightful journaling assistant that helps users gain deeper understanding from their journal entries.
+Your reflections should be thoughtful, personal, and help the user develop greater self-awareness.
+Always maintain a supportive, non-judgmental tone.`,
+      prompt: `Please provide a thoughtful reflection on the following journal entry:
+
+${truncatedContent}
+
+In your reflection, please include:
+1. A brief summary of key themes or topics discussed
+2. Analysis of any emotional patterns or states expressed in the entry
+3. Noteworthy insights or perspectives the writer might consider
+4. 1-2 gentle questions that might help the writer explore their thoughts further
+5. If appropriate, a small actionable suggestion related to the journal content
+
+Format your response with clear sections and make it personal to the writer. Be empathetic but also honest and constructive.`,
+    });
+
+    return reflection;
+  } catch (error) {
+    console.error('Error generating journal reflection:', error);
+    return 'Failed to generate reflection. Please try again.';
+  }
+}

@@ -25,6 +25,7 @@ export interface MinimalTiptapProps
   onChange?: (value: Content) => void;
   className?: string;
   editorContentClassName?: string;
+  onEditorReady?: (editor: Editor) => void;
 }
 
 const Toolbar = ({ editor }: { editor: Editor }) => (
@@ -75,37 +76,55 @@ const Toolbar = ({ editor }: { editor: Editor }) => (
 export const MinimalTiptapEditor = React.forwardRef<
   HTMLDivElement,
   MinimalTiptapProps
->(({ value, onChange, className, editorContentClassName, ...props }, ref) => {
-  const editor = useMinimalTiptapEditor({
-    value,
-    onUpdate: onChange,
-    ...props,
-  });
+>(
+  (
+    {
+      value,
+      onChange,
+      className,
+      editorContentClassName,
+      onEditorReady,
+      ...props
+    },
+    ref
+  ) => {
+    const editor = useMinimalTiptapEditor({
+      value,
+      onUpdate: onChange,
+      ...props,
+    });
 
-  if (!editor) {
-    return null;
+    React.useEffect(() => {
+      if (editor && onEditorReady) {
+        onEditorReady(editor);
+      }
+    }, [editor, onEditorReady]);
+
+    if (!editor) {
+      return null;
+    }
+
+    return (
+      <MeasuredContainer
+        as="div"
+        name="editor"
+        ref={ref}
+        className={cn(
+          'flex h-auto min-h-72 w-full flex-col focus-within:border-primary',
+          className
+        )}
+      >
+        <Toolbar editor={editor} />
+        <EditorContent
+          editor={editor}
+          className={cn('editor', editorContentClassName)}
+        />
+        <LinkBubbleMenu editor={editor} />
+        <BubbleMenu editor={editor} />
+      </MeasuredContainer>
+    );
   }
-
-  return (
-    <MeasuredContainer
-      as="div"
-      name="editor"
-      ref={ref}
-      className={cn(
-        'flex h-auto min-h-72 w-full flex-col focus-within:border-primary',
-        className
-      )}
-    >
-      <Toolbar editor={editor} />
-      <EditorContent
-        editor={editor}
-        className={cn('editor', editorContentClassName)}
-      />
-      <LinkBubbleMenu editor={editor} />
-      <BubbleMenu editor={editor} />
-    </MeasuredContainer>
-  );
-});
+);
 
 MinimalTiptapEditor.displayName = 'MinimalTiptapEditor';
 

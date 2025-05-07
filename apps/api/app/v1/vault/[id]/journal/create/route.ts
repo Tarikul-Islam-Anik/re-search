@@ -6,7 +6,17 @@ const schema = z.object({
   title: z.string().optional(),
   content: z.string(),
   mood: z.string().optional(),
+  editorData: z
+    .object({
+      cursorPosition: z.number().optional(),
+      wordCount: z.number().optional(),
+      characterCount: z.number().optional(),
+      lastEditedAt: z.string().optional(),
+    })
+    .optional(),
+  attachments: z.array(z.string()).optional(),
 });
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -27,8 +37,14 @@ export async function POST(
 
   await database.journal.create({
     data: {
-      ...data,
+      title: data.title,
+      content: data.content,
       vaultId: id,
+      files: {
+        connect: data.attachments?.map((attachmentId) => ({
+          id: attachmentId,
+        })),
+      },
     },
   });
 

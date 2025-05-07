@@ -542,7 +542,7 @@ const MultipleSelector = ({
                 : placeholder
             }
             className={cn(
-              'flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground/70 disabled:cursor-not-allowed',
+              '!outline-none flex-1 bg-transparent !focus-visible:outline-none !focus:outline-none placeholder:text-muted-foreground/70 focus:ring-0 disabled:cursor-not-allowed',
               {
                 'w-full': hidePlaceholderWhenSelected,
                 'py-3 pe-3': selected.length === 0,

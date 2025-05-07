@@ -1,6 +1,7 @@
 'use client';
 
 import { Container } from '@/components/container';
+import { useJournalOperations } from '@/hooks/query/journal/use-journal-operations';
 import { useJournalStore } from '@/store/use-journal-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import MultipleSelector, {
@@ -17,9 +18,11 @@ import {
 } from '@repo/design-system/components/ui/form';
 import { Input } from '@repo/design-system/components/ui/input';
 import { format } from 'date-fns';
-import { PaperclipIcon, XIcon } from 'lucide-react';
+import { Loader2Icon, PaperclipIcon, SaveIcon, XIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 // Define the form schema with Zod
@@ -30,89 +33,54 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const frameworks: Option[] = [
-  {
-    value: 'next.js',
-    label: 'Next.js',
-  },
-  {
-    value: 'sveltekit',
-    label: 'SvelteKit',
-  },
-  {
-    value: 'nuxt.js',
-    label: 'Nuxt.js',
-    disable: true,
-  },
-  {
-    value: 'remix',
-    label: 'Remix',
-  },
-  {
-    value: 'astro',
-    label: 'Astro',
-  },
-  {
-    value: 'angular',
-    label: 'Angular',
-  },
-  {
-    value: 'vue',
-    label: 'Vue.js',
-  },
-  {
-    value: 'react',
-    label: 'React',
-  },
-  {
-    value: 'ember',
-    label: 'Ember.js',
-  },
-  {
-    value: 'gatsby',
-    label: 'Gatsby',
-  },
-  {
-    value: 'eleventy',
-    label: 'Eleventy',
-    disable: true,
-  },
-  {
-    value: 'solid',
-    label: 'SolidJS',
-  },
-  {
-    value: 'preact',
-    label: 'Preact',
-  },
-  {
-    value: 'qwik',
-    label: 'Qwik',
-  },
-  {
-    value: 'alpine',
-    label: 'Alpine.js',
-  },
-  {
-    value: 'lit',
-    label: 'Lit',
-  },
-];
-const JournalDetails = () => {
+// Helper function to get file type from URL or name
+function getFileType(file: { url: string; name: string }) {
+  const extension = file.name.split('.').pop()?.toLowerCase();
+
+  // Map common extensions to general types
+  const typeMap: Record<string, string> = {
+    pdf: 'document',
+    doc: 'document',
+    docx: 'document',
+    txt: 'document',
+    jpg: 'image',
+    jpeg: 'image',
+    png: 'image',
+    gif: 'image',
+    mp4: 'video',
+    mov: 'video',
+    mp3: 'audio',
+    wav: 'audio',
+  };
+
+  return extension ? typeMap[extension] || 'document' : 'document';
+}
+
+interface JournalDetailsProps {
+  isEditMode?: boolean;
+}
+
+const JournalDetails = ({ isEditMode = false }: JournalDetailsProps) => {
+  const router = useRouter();
   const {
     getActiveEntry,
     activeEntryId,
     createEntry,
     updateEntry,
     removeAttachment,
+    clearActiveEntry,
   } = useJournalStore();
 
+  const { saveCurrentEntry, isLoading, availableFiles } =
+    useJournalOperations();
+
   // Create a new entry if there's no active entry on component mount
+  // but only if we're not in edit mode (where entry is loaded from API)
   useEffect(() => {
-    if (!activeEntryId) {
+    if (!activeEntryId && !isEditMode) {
       createEntry();
     }
-  }, [activeEntryId, createEntry]);
+  }, [activeEntryId, createEntry, isEditMode]);
 
   // Get the active journal entry
   const entry = getActiveEntry();
@@ -137,9 +105,18 @@ const JournalDetails = () => {
   }, [entry, form]);
 
   // Handle form submission
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     if (activeEntryId) {
       updateEntry(activeEntryId, { title: values.title });
+      try {
+        await saveCurrentEntry();
+        toast.success('Journal entry saved successfully');
+        // Clear active entry and redirect to timeline
+        clearActiveEntry();
+        router.push('/journal/timeline');
+      } catch (error) {
+        toast.error('Failed to save journal entry');
+      }
     }
   };
 
@@ -158,32 +135,52 @@ const JournalDetails = () => {
     return format(new Date(dateString), 'MMM dd, yyyy h:mm a');
   };
 
+  // Convert available files to options for MultipleSelector
+  const fileOptions: Option[] =
+    availableFiles?.map((file) => ({
+      label: file.name,
+      value: file.id,
+    })) || [];
+
+  // Get currently selected file IDs
+  const selectedFileIds = entry?.attachments.map((a) => a.id) || [];
+
   return (
     <Container className="space-y-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* Title Input */}
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Journal Entry Title"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      handleTitleChange(e.target.value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex items-end gap-x-2">
+            {/* Title Input */}
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Journal Entry Title"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleTitleChange(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
+            {/* Save Button */}
+            <Button type="submit" size="icon" disabled={isLoading}>
+              {isLoading ? (
+                <Loader2Icon className="animate-spin" />
+              ) : (
+                <SaveIcon />
+              )}
+            </Button>
+          </div>
           {/* Attachments */}
           <div className="space-y-2">
             <div className="space-y-4">
@@ -193,8 +190,28 @@ const JournalDetails = () => {
                 name="attachmentType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Attachment Type</FormLabel>
-                    <MultipleSelector options={frameworks} />
+                    <FormLabel>Attachments</FormLabel>
+                    <MultipleSelector
+                      options={fileOptions}
+                      value={fileOptions.filter((opt) =>
+                        selectedFileIds.includes(opt.value)
+                      )}
+                      onChange={(selected) => {
+                        if (activeEntryId && availableFiles) {
+                          const selectedFiles = availableFiles.filter((f) =>
+                            selected.some((s) => s.value === f.id)
+                          );
+                          updateEntry(activeEntryId, {
+                            attachments: selectedFiles.map((f) => ({
+                              id: f.id,
+                              name: f.name,
+                              url: f.url,
+                              type: getFileType(f),
+                            })),
+                          });
+                        }
+                      }}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}

@@ -1,8 +1,8 @@
 'use client';
 
 import { useJournalStore } from '@/store/use-journal-store';
-import type { Content } from '@tiptap/react';
-import { useEffect } from 'react';
+import type { Content, Editor as TiptapEditor } from '@tiptap/react';
+import { useEffect, useRef } from 'react';
 import MinimalTiptapEditor from './editor/index';
 
 interface EditorProps {
@@ -11,7 +11,9 @@ interface EditorProps {
 }
 
 const Editor = ({ placeholder, editorClassName }: EditorProps) => {
-  const { activeEntryId, getActiveEntry, updateEntry } = useJournalStore();
+  const { activeEntryId, getActiveEntry, updateEntry, updateEditorData } =
+    useJournalStore();
+  const editorRef = useRef<TiptapEditor | null>(null);
 
   // Get content from store
   const entry = getActiveEntry();
@@ -26,6 +28,24 @@ const Editor = ({ placeholder, editorClassName }: EditorProps) => {
 
     // Update the journal entry with new content
     updateEntry(activeEntryId, { content: contentString });
+
+    // Track editor statistics
+    if (editorRef.current) {
+      const editor = editorRef.current;
+      const characterCount = editor.storage.characterCount?.characters() || 0;
+      const wordCount = editor.storage.characterCount?.words() || 0;
+
+      // Use selection to get cursor position if available
+      const cursorPosition = editor.state.selection.anchor;
+
+      // Update editor data in store
+      updateEditorData(activeEntryId, {
+        characterCount,
+        wordCount,
+        cursorPosition,
+        lastEditedAt: new Date().toISOString(),
+      });
+    }
   };
 
   // Create a new entry if there's no active entry on component mount
@@ -35,6 +55,11 @@ const Editor = ({ placeholder, editorClassName }: EditorProps) => {
     }
   }, [activeEntryId]);
 
+  // Save editor reference to track statistics
+  const handleEditorReady = (editor: TiptapEditor) => {
+    editorRef.current = editor;
+  };
+
   return (
     <MinimalTiptapEditor
       value={initialContent}
@@ -42,6 +67,7 @@ const Editor = ({ placeholder, editorClassName }: EditorProps) => {
       placeholder={placeholder}
       editorContentClassName={editorClassName}
       autofocus="end"
+      onEditorReady={handleEditorReady}
     />
   );
 };

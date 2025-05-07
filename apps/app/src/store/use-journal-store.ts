@@ -9,11 +9,19 @@ export interface Attachment {
   type: string;
 }
 
+export interface EditorData {
+  cursorPosition?: number;
+  wordCount?: number;
+  characterCount?: number;
+  lastEditedAt?: string;
+}
+
 export interface JournalEntry {
   id: string;
   title: string;
   content: string;
   attachments: Attachment[];
+  editorData?: EditorData;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,7 +31,7 @@ interface JournalState {
   activeEntryId: string | null;
 
   // Actions
-  createEntry: () => void;
+  createEntry: () => string;
   updateEntry: (
     id: string,
     updates: Partial<Omit<JournalEntry, 'id' | 'createdAt'>>
@@ -33,6 +41,8 @@ interface JournalState {
   getActiveEntry: () => JournalEntry | undefined;
   addAttachment: (entryId: string, attachment: Omit<Attachment, 'id'>) => void;
   removeAttachment: (entryId: string, attachmentId: string) => void;
+  updateEditorData: (entryId: string, editorData: EditorData) => void;
+  clearActiveEntry: () => void;
 }
 
 // Create the journal store with persistence
@@ -49,6 +59,11 @@ export const useJournalStore = create<JournalState>()(
           title: 'Untitled',
           content: '',
           attachments: [],
+          editorData: {
+            wordCount: 0,
+            characterCount: 0,
+            lastEditedAt: new Date().toISOString(),
+          },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
@@ -137,6 +152,29 @@ export const useJournalStore = create<JournalState>()(
             };
           }),
         }));
+      },
+
+      // Update editor data for a journal entry
+      updateEditorData: (entryId, editorData) => {
+        set((state) => ({
+          entries: state.entries.map((entry) => {
+            if (entry.id !== entryId) return entry;
+            return {
+              ...entry,
+              editorData: {
+                ...entry.editorData,
+                ...editorData,
+                lastEditedAt: new Date().toISOString(),
+              },
+              updatedAt: new Date().toISOString(),
+            };
+          }),
+        }));
+      },
+
+      // Clear the active journal entry
+      clearActiveEntry: () => {
+        set({ activeEntryId: null });
       },
     }),
     {

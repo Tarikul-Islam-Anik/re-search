@@ -1,12 +1,8 @@
-import { Container } from '@/components/container';
+'use client';
 import JournalTimeline from './_components/journal-timeline';
 
 const TimelinePage = () => {
-  return (
-    <Container>
-      <JournalTimeline />
-    </Container>
-  );
+  return <JournalTimeline />;
 };
 
 TimelinePage.displayName = 'TimelinePage';
