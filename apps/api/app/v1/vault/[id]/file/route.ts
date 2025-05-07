@@ -2,6 +2,21 @@ import { pinata } from '@/utils/config';
 import { database } from '@repo/database';
 import { type NextRequest, NextResponse } from 'next/server';
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+
+  const files = await database.file.findMany({
+    where: {
+      vaultId: id,
+    },
+  });
+
+  return NextResponse.json(files, { status: 200 });
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -67,6 +82,52 @@ export async function POST(
       );
     }
 
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: vaultId } = await params;
+    const body = await request.json();
+    const fileId = body.id;
+
+    if (!fileId) {
+      return NextResponse.json(
+        { error: 'File ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Verify the file belongs to the vault
+    const file = await database.file.findFirst({
+      where: {
+        id: fileId,
+        vaultId,
+      },
+    });
+
+    if (!file) {
+      return NextResponse.json(
+        { error: 'File not found or access denied' },
+        { status: 404 }
+      );
+    }
+
+    // Delete the file from the database
+    const deletedFile = await database.file.delete({
+      where: { id: fileId },
+    });
+
+    return NextResponse.json(deletedFile, { status: 200 });
+  } catch (error) {
+    console.error('Error deleting file:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
