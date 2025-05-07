@@ -83,6 +83,9 @@ importers:
       next:
         specifier: 15.1.7
         version: 15.1.7(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      pinata:
+        specifier: ^2.2.2
+        version: 2.2.2
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -8822,6 +8825,10 @@ packages:
   pify@3.0.0:
     resolution: {integrity: sha512-C3FsVNH1udSEX48gGX1xfvwTWfsYWj5U+8/uK15BGzIGrKoUpghX8hWZwa/OFnakBiiVNmBvemTJR5mcy7iPcg==}
     engines: {node: '>=4'}
+
+  pinata@2.2.2:
+    resolution: {integrity: sha512-xIPWyN7xFU/YBBqXlPoMaAQYBNKlP6Zuq0HZ75KituByHzeCqxMdF87YXcZpADxyGcYRQ5JEJn1IBzX909erow==}
+    engines: {node: '>=20'}
 
   pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
@@ -19464,6 +19471,8 @@ snapshots:
   pify@2.3.0: {}
 
   pify@3.0.0: {}
+
+  pinata@2.2.2: {}
 
   pirates@4.0.6: {}
 

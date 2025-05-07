@@ -1,17 +1,11 @@
 'use client';
 
+import FileUploader from '@/components/file-uploader';
 import { extractTextFromFile } from '@/lib/file-parser';
 import { useDocumentStore } from '@/store/use-document-store';
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from '@repo/design-system/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
-import FileUploader from './file-uploader';
 
 const InitialUploader = () => {
   const [error, setError] = useState<string | null>(null);
@@ -56,14 +50,6 @@ const InitialUploader = () => {
 
   return (
     <div className="flex flex-col space-y-6">
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="size-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
       <div className="grid h-[90vh] grid-cols-1 place-items-center">
         <div className="flex flex-col items-center justify-center">
           <h1 className="font-bold text-3xl">Upload a Document</h1>

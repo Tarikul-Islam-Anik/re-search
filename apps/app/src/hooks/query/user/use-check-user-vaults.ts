@@ -1,3 +1,4 @@
+import { useUserStore } from '@/store/user';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -9,7 +10,9 @@ interface CheckVaultsResponse {
   vaultDescription: string;
 }
 
-export const useCheckUserVaults = (userId: string | undefined) => {
+export const useCheckUserVaults = () => {
+  const { user } = useUserStore();
+  const userId = user?.id;
   return useQuery({
     queryKey: ['check-user-vaults', userId],
     queryFn: () => checkUserVaults(userId),
