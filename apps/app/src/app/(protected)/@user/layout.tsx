@@ -7,6 +7,7 @@ import {
   SidebarTrigger,
 } from '@repo/design-system/components/ui/sidebar';
 import axios from 'axios';
+import type { Metadata } from 'next';
 import type React from 'react';
 import { AppSidebar } from './_components/app-sidebar';
 import { VaultCheck } from './_components/vault-check';
@@ -14,6 +15,11 @@ import { VaultCheck } from './_components/vault-check';
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
 }
+
+export const metadata: Metadata = {
+  title: 'Re:search',
+  description: 'Re:search',
+};
 
 const UserDashboardLayout = async ({ children }: UserDashboardLayoutProps) => {
   const session = await auth();

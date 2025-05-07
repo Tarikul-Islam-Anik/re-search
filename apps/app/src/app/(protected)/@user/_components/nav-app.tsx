@@ -38,7 +38,7 @@ export function NavApp() {
       items: [
         {
           title: 'Upload a file',
-          url: 'upload-file',
+          url: 'upload',
         },
         {
           title: 'Manage',
