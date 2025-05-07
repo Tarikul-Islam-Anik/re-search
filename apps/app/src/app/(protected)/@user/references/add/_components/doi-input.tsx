@@ -117,6 +117,13 @@ export function DoiInput() {
           </SectionDescription>
         </SectionHeader>
         <SectionContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
@@ -127,56 +134,39 @@ export function DoiInput() {
                 name="doi"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="doi">DOI</FormLabel>
+                    <FormLabel>DOI</FormLabel>
                     <FormControl>
-                      <Input
-                        id="doi"
-                        placeholder="Enter DOI (e.g., 10.1038/s41586-021-03819-2)"
-                        disabled={isLoading}
-                        {...field}
-                      />
+                      <div className="flex items-center space-x-2">
+                        <Input
+                          placeholder="10.1038/s41586-021-03819-2"
+                          {...field}
+                          disabled={isLoading}
+                        />
+                        <Button type="submit" disabled={isLoading}>
+                          {isLoading ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            'Lookup'
+                          )}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleReset}
+                          disabled={isLoading}
+                        >
+                          Reset
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormDescription>
-                      You can also paste a DOI URL (e.g.,
-                      https://doi.org/10.1038/s41586-021-03819-2)
+                      Enter a Digital Object Identifier (DOI) to automatically
+                      fill the reference form
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              <div className="flex gap-2">
-                <Button
-                  type="submit"
-                  disabled={isLoading || !form.formState.isValid}
-                  className="flex-1"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Fetching...
-                    </>
-                  ) : (
-                    'Get Reference'
-                  )}
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleReset}
-                  disabled={isLoading}
-                >
-                  Reset
-                </Button>
-              </div>
             </form>
           </Form>
         </SectionContent>

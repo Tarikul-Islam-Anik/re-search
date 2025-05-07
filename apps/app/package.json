@@ -52,6 +52,7 @@
     "framer-motion": "^12.4.10",
     "fuse.js": "^7.1.0",
     "import-in-the-middle": "^1.13.1",
+    "jszip": "^3.10.1",
     "katex": "^0.16.22",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.477.0",

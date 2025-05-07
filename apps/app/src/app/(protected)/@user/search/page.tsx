@@ -82,7 +82,7 @@ function MainSearch({ onSearch }: { onSearch: (query: string) => void }) {
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           />
           <Button onClick={handleSearch}>
-            <Search className="mr-2 h-4 w-4" />
+            <Search className="" />
             Search
           </Button>
         </div>

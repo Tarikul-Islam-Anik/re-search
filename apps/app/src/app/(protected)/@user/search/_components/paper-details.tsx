@@ -143,19 +143,19 @@ export function PaperDetails() {
           <Tabs defaultValue="overview">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">
-                <FileText className="mr-2 h-4 w-4" />
+                <FileText className="" />
                 Overview
               </TabsTrigger>
               <TabsTrigger value="authors">
-                <Users className="mr-2 h-4 w-4" />
+                <Users className="" />
                 Authors
               </TabsTrigger>
               <TabsTrigger value="references">
-                <MessageSquare className="mr-2 h-4 w-4" />
+                <MessageSquare className="" />
                 References
               </TabsTrigger>
               <TabsTrigger value="share">
-                <Share2 className="mr-2 h-4 w-4" />
+                <Share2 className="" />
                 Share
               </TabsTrigger>
             </TabsList>
@@ -195,7 +195,7 @@ export function PaperDetails() {
                   }
                   disabled={!selectedPaper.url}
                 >
-                  <ExternalLink className="mr-2 h-4 w-4" />
+                  <ExternalLink className="" />
                   View Full Paper
                 </Button>
                 <Button
@@ -207,7 +207,7 @@ export function PaperDetails() {
                   }
                   disabled={!selectedPaper.pdfUrl}
                 >
-                  <Download className="mr-2 h-4 w-4" />
+                  <Download className="" />
                   Download PDF
                 </Button>
               </div>
@@ -353,7 +353,7 @@ export function PaperDetails() {
               size="sm"
               onClick={() => handleStatusChange('read')}
             >
-              <BookOpen className="mr-2 h-4 w-4" />
+              <BookOpen className="" />
               Read
             </Button>
             <Button
@@ -361,7 +361,7 @@ export function PaperDetails() {
               size="sm"
               onClick={() => handleStatusChange('to-read')}
             >
-              <BookmarkPlus className="mr-2 h-4 w-4" />
+              <BookmarkPlus className="" />
               To Read
             </Button>
             <Button
@@ -369,7 +369,7 @@ export function PaperDetails() {
               size="sm"
               onClick={() => handleStatusChange('favorite')}
             >
-              <Star className="mr-2 h-4 w-4" />
+              <Star className="" />
               Favorite
             </Button>
           </div>

@@ -87,7 +87,7 @@ export function NavApp() {
         },
         {
           title: 'Manage',
-          url: 'manage',
+          url: 'references',
         },
       ],
     },

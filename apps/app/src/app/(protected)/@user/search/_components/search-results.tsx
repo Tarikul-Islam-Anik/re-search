@@ -98,11 +98,11 @@ function PaperCard({ paper }: { paper: Paper }) {
                     }
                   }}
                 >
-                  <ExternalLink className="mr-2 h-4 w-4" />
+                  <ExternalLink className="" />
                   View Paper
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                  <Download className="mr-2 h-4 w-4" />
+                  <Download className="" />
                   Download PDF
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -111,7 +111,7 @@ function PaperCard({ paper }: { paper: Paper }) {
                     toggleStatus('read');
                   }}
                 >
-                  <BookOpen className="mr-2 h-4 w-4" />
+                  <BookOpen className="" />
                   {paperStatus?.status === 'read'
                     ? 'Unmark as Read'
                     : 'Mark as Read'}
@@ -122,7 +122,7 @@ function PaperCard({ paper }: { paper: Paper }) {
                     toggleStatus('to-read');
                   }}
                 >
-                  <BookmarkPlus className="mr-2 h-4 w-4" />
+                  <BookmarkPlus className="" />
                   {paperStatus?.status === 'to-read'
                     ? 'Remove from Reading List'
                     : 'Add to Reading List'}
@@ -133,7 +133,7 @@ function PaperCard({ paper }: { paper: Paper }) {
                     toggleStatus('favorite');
                   }}
                 >
-                  <Star className="mr-2 h-4 w-4" />
+                  <Star className="" />
                   {paperStatus?.status === 'favorite'
                     ? 'Remove from Favorites'
                     : 'Add to Favorites'}

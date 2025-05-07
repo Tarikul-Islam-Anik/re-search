@@ -85,18 +85,18 @@ export default function MermaidEditor() {
         <h2 className="font-medium text-lg">Mermaid.js Editor</h2>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm" onClick={handleCopyCode}>
-            <Copy className="mr-2 h-4 w-4" />
+            <Copy className="" />
             Copy
           </Button>
           <Button variant="outline" size="sm" onClick={handleDownloadSVG}>
-            <Download className="mr-2 h-4 w-4" />
+            <Download className="" />
             Download SVG
           </Button>
           <Button variant="outline" size="sm" onClick={toggleFullscreen}>
             {isFullscreen ? (
-              <Minimize2 className="mr-2 h-4 w-4" />
+              <Minimize2 className="" />
             ) : (
-              <Maximize2 className="mr-2 h-4 w-4" />
+              <Maximize2 className="" />
             )}
             {isFullscreen ? 'Exit Fullscreen' : 'Preview Fullscreen'}
           </Button>

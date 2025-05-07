@@ -72,7 +72,7 @@ const PaperWritePage = () => {
           disabled={isSaving || isFetching}
           className="ml-2"
         >
-          {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isSaving && <Loader2 className=" animate-spin" />}
           {isSaving ? 'Saving...' : 'Save'}
         </Button>
       </div>

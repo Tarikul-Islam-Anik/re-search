@@ -6,8 +6,8 @@ const vaultIdSchema = z.string();
 
 const schema = z.object({
   title: z.string(),
-  author: z.string(),
-  year: z.number().optional(),
+  authors: z.string(),
+  year: z.string().optional(),
   publisher: z.string().optional(),
   journal: z.string().optional(),
   volume: z.string().optional(),
@@ -36,7 +36,7 @@ export async function POST(
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
 
-  await database.citation.create({
+  await database.reference.create({
     data: {
       ...data,
       vaultId,

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import type React from 'react';
-
 interface ReferencesLayoutProps {
   children: React.ReactNode;
 }
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const ReferencesLayout = ({ children }: ReferencesLayoutProps) => {
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
 
 ReferencesLayout.displayName = 'ReferencesLayout';
