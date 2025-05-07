@@ -18,7 +18,8 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  vaults Vault[]
+  vaults      Vault[]
+  paperStatus PaperStatus[]
 
   subscription Subscription?
 }

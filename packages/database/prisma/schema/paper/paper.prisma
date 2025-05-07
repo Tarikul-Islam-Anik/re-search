@@ -12,6 +12,7 @@ model Paper {
   keywords String[]
   authors  Author[] @relation("PaperAuthors")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  paperStatus PaperStatus[]
 }

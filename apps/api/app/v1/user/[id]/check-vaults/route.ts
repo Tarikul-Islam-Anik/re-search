@@ -21,9 +21,20 @@ export async function GET(
       },
     });
     if (!vault) {
-      return NextResponse.json({ error: 'No vaults found' }, { status: 404 });
+      return NextResponse.json(
+        {
+          hasVaults: false,
+          vaultId: null,
+          vaultName: null,
+          vaultDescription: null,
+          vaultCount: 0,
+        },
+        { status: 200 }
+      );
     }
     const vaultId = vault.id;
+    const vaultName = vault.name;
+    const vaultDescription = vault.description;
 
     const vaultCount = await database.vault.count({
       where: {
@@ -35,6 +46,8 @@ export async function GET(
       vaultId,
       hasVaults: vaultCount > 0,
       vaultCount,
+      vaultName,
+      vaultDescription,
     });
   } catch (error) {
     console.error('Error checking vaults:', error);

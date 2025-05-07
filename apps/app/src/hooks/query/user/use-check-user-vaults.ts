@@ -5,6 +5,8 @@ interface CheckVaultsResponse {
   vaultId: string;
   hasVaults: boolean;
   vaultCount: number;
+  vaultName: string;
+  vaultDescription: string;
 }
 
 export const useCheckUserVaults = (userId: string | undefined) => {

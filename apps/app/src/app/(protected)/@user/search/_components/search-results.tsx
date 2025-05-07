@@ -8,6 +8,8 @@ import {
   SectionHeader,
   SectionTitle,
 } from '@/components/section';
+import { usePaperStatus } from '@/hooks/use-paper-status';
+import { useSearchPapers, useSearchStore } from '@/store/use-search-store';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
@@ -34,17 +36,14 @@ import {
   MoreHorizontal,
   Star,
 } from 'lucide-react';
-import {
-  useSearchPapers,
-  useSearchStore,
-} from '../../../../../store/use-search-store';
+import type { Paper } from './search-filter-types';
 
-export function SearchResults() {
-  const { data: papers = [], isLoading, error, refetch } = useSearchPapers();
+function PaperCard({ paper }: { paper: Paper }) {
+  const { paperStatus, toggleStatus, isUpdating } = usePaperStatus(paper.id);
   const { selectPaper, selectedPaperId } = useSearchStore();
 
-  const getStatusIcon = (status: string | undefined) => {
-    switch (status) {
+  const getStatusIcon = (currentStatus: string | undefined) => {
+    switch (currentStatus) {
       case 'read':
         return <BookOpen className="h-4 w-4 text-green-500" />;
       case 'to-read':
@@ -55,6 +54,123 @@ export function SearchResults() {
         return null;
     }
   };
+
+  return (
+    <Card
+      key={paper.id}
+      className={cn(
+        'cursor-pointer transition-colors hover:bg-muted/50',
+        selectedPaperId === paper.id && 'border-primary bg-muted/70'
+      )}
+      onClick={() => selectPaper(paper.id)}
+    >
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle className="text-lg">{paper.title}</CardTitle>
+            <p className="text-muted-foreground text-sm">
+              {paper.authors || 'Unknown Authors'}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {getStatusIcon(paperStatus?.status)}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => e.stopPropagation()}
+                  disabled={isUpdating}
+                >
+                  {isUpdating ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <MoreHorizontal className="h-4 w-4" />
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (paper.url) {
+                      window.open(paper.url, '_blank');
+                    }
+                  }}
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  View Paper
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Download PDF
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleStatus('read');
+                  }}
+                >
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  {paperStatus?.status === 'read'
+                    ? 'Unmark as Read'
+                    : 'Mark as Read'}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleStatus('to-read');
+                  }}
+                >
+                  <BookmarkPlus className="mr-2 h-4 w-4" />
+                  {paperStatus?.status === 'to-read'
+                    ? 'Remove from Reading List'
+                    : 'Add to Reading List'}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleStatus('favorite');
+                  }}
+                >
+                  <Star className="mr-2 h-4 w-4" />
+                  {paperStatus?.status === 'favorite'
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites'}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pb-2">
+        <p className="line-clamp-3 text-sm">
+          {paper.abstract || 'No abstract available'}
+        </p>
+      </CardContent>
+      <CardFooter className="justify-between pt-2">
+        <div className="flex flex-wrap gap-1">
+          {paper.keywords?.slice(0, 3).map((keyword) => (
+            <Badge key={keyword} variant="outline" className="text-xs">
+              {keyword}
+            </Badge>
+          ))}
+          {paper.keywords?.length > 3 && (
+            <Badge variant="outline" className="text-xs">
+              +{paper.keywords.length - 3} more
+            </Badge>
+          )}
+        </div>
+        <div className="text-muted-foreground text-sm">
+          {paper.journal}, {paper.year || 'N/A'}
+        </div>
+      </CardFooter>
+    </Card>
+  );
+}
+
+export function SearchResults() {
+  const { data: papers = [], isLoading, error, refetch } = useSearchPapers();
 
   const renderContent = () => {
     if (isLoading) {
@@ -115,90 +231,7 @@ export function SearchResults() {
     return (
       <div className="space-y-4">
         {papers.map((paper) => (
-          <Card
-            key={paper.id}
-            className={cn(
-              'cursor-pointer transition-colors hover:bg-muted/50',
-              selectedPaperId === paper.id && 'border-primary bg-muted/70'
-            )}
-            onClick={() => selectPaper(paper.id)}
-          >
-            <CardHeader className="pb-2">
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-lg">{paper.title}</CardTitle>
-                  <p className="text-muted-foreground text-sm">
-                    {paper.authors || 'Unknown Authors'}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  {getStatusIcon(paper.status)}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (paper.url) {
-                            window.open(paper.url, '_blank');
-                          }
-                        }}
-                      >
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        View Paper
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                        <BookOpen className="mr-2 h-4 w-4" />
-                        Mark as Read
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                        <BookmarkPlus className="mr-2 h-4 w-4" />
-                        Add to Reading List
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                        <Star className="mr-2 h-4 w-4" />
-                        Add to Favorites
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pb-2">
-              <p className="line-clamp-3 text-sm">
-                {paper.abstract || 'No abstract available'}
-              </p>
-            </CardContent>
-            <CardFooter className="justify-between pt-2">
-              <div className="flex flex-wrap gap-1">
-                {paper.keywords?.slice(0, 3).map((keyword) => (
-                  <Badge key={keyword} variant="outline" className="text-xs">
-                    {keyword}
-                  </Badge>
-                ))}
-                {paper.keywords?.length > 3 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{paper.keywords.length - 3} more
-                  </Badge>
-                )}
-              </div>
-              <div className="text-muted-foreground text-sm">
-                {paper.journal}, {paper.year || 'N/A'}
-              </div>
-            </CardFooter>
-          </Card>
+          <PaperCard key={paper.id} paper={paper} />
         ))}
       </div>
     );

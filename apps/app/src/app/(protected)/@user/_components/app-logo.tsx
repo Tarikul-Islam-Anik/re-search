@@ -1,15 +1,20 @@
 'use client';
 
+import { useCheckUserVaults } from '@/hooks/query/user/use-check-user-vaults';
+import { useUserStore } from '@/store/user';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from '@repo/design-system/components/ui/sidebar';
+import { Skeleton } from '@repo/design-system/components/ui/skeleton';
 import { cn } from '@repo/design-system/lib/utils';
 
 export function AppLogo() {
   const { state } = useSidebar();
+  const user = useUserStore((state) => state.user);
+  const { data, isLoading } = useCheckUserVaults(user?.id);
 
   return (
     <SidebarMenu>
@@ -37,7 +42,13 @@ export function AppLogo() {
             })}
           >
             <span className="truncate font-semibold">Re:Search</span>
-            <span className="truncate text-xs">Admin</span>
+            {isLoading ? (
+              <Skeleton className="h-3 w-16" />
+            ) : (
+              <span className="truncate text-xs">
+                {data?.vaultCount ? data.vaultName : 'No Vaults'}
+              </span>
+            )}
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>
