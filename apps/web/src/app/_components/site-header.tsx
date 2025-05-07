@@ -72,7 +72,7 @@ export const SiteHeader = () => {
         </div>
         <div className="flex lg:mt-3 lg:justify-center">
           <Link href="/">
-            <Logo full className="h-8 w-auto" />
+            <Logo full className="scale-75" />
           </Link>
         </div>
         <div className="flex w-full justify-end gap-4">
