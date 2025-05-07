@@ -1,5 +1,3 @@
-'use server';
-
 import { database } from '@repo/database';
 // import { resend } from '@repo/email';
 // import { VerifyEmail } from '@repo/email/templates/verify-email';

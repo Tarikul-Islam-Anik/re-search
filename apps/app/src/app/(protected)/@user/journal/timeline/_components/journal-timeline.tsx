@@ -55,6 +55,25 @@ interface GroupedJournals {
   entries: Journal[];
 }
 
+// TipTap JSON structure types
+interface TipTapTextNode {
+  type: 'text';
+  text: string;
+  marks?: Array<{ type: string; attrs?: Record<string, unknown> }>;
+}
+
+interface TipTapNode {
+  type: string;
+  content?: TipTapNode[];
+  text?: string;
+  marks?: Array<{ type: string; attrs?: Record<string, unknown> }>;
+}
+
+interface TipTapDoc {
+  type: 'doc';
+  content: TipTapNode[];
+}
+
 const JournalTimeline = () => {
   const router = useRouter();
   const [journalToDelete, setJournalToDelete] = useState<string | null>(null);
@@ -324,11 +343,37 @@ const JournalEntryItem = ({
   const getContentPreview = (content: string): string[] => {
     try {
       // Try to parse as JSON, as stored by the editor
-      const parsedContent = JSON.parse(content);
+      const parsedContent = JSON.parse(content) as
+        | TipTapDoc
+        | { text: string }[];
 
-      // Extract text from parsed content - this needs to be adjusted based on your editor's format
-      // This is a simplified example
-      return ['Content stored in rich text format'];
+      // Handle TipTap JSON content
+      if ('type' in parsedContent && parsedContent.type === 'doc') {
+        // Extract text content from TipTap JSON structure
+        const extractText = (node: TipTapNode): string => {
+          if (node.type === 'text') {
+            return node.text || '';
+          }
+          if (node.content) {
+            return node.content.map(extractText).join('');
+          }
+          return '';
+        };
+
+        // Get the first few paragraphs
+        const paragraphs = parsedContent.content
+          ?.filter((node: TipTapNode) => node.type === 'paragraph')
+          .slice(0, 3)
+          .map((node: TipTapNode) => extractText(node))
+          .filter(Boolean);
+
+        return paragraphs.length > 0 ? paragraphs : ['No content available'];
+      }
+
+      // Fallback for other JSON formats
+      return Array.isArray(parsedContent)
+        ? parsedContent.map((item) => item.text)
+        : ['No content available'];
     } catch {
       // If not JSON, split into bullet points by new lines
       const lines = content.split('\n').filter((line) => line.trim());
@@ -346,9 +391,14 @@ const JournalEntryItem = ({
       <CardContent>
         <div className="space-y-2">
           {contentItems.map((item, i) => (
-            <p key={i} className="text-foreground text-md leading-relaxed">
-              {item}
-            </p>
+            <div
+              key={i}
+              className="prose dark:prose-invert max-w-none"
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+              dangerouslySetInnerHTML={{
+                __html: item.replaceAll('\n', '<br />').replaceAll('"', ''),
+              }}
+            />
           ))}
         </div>
       </CardContent>

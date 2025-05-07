@@ -36,6 +36,7 @@ interface JournalState {
     id: string,
     updates: Partial<Omit<JournalEntry, 'id' | 'createdAt'>>
   ) => void;
+  updateEntryId: (oldId: string, newId: string) => void;
   deleteEntry: (id: string) => void;
   setActiveEntryId: (id: string | null) => void;
   getActiveEntry: () => JournalEntry | undefined;
@@ -175,6 +176,21 @@ export const useJournalStore = create<JournalState>()(
       // Clear the active journal entry
       clearActiveEntry: () => {
         set({ activeEntryId: null });
+      },
+
+      // Update an entry's ID (used after server creation)
+      updateEntryId: (oldId: string, newId: string) => {
+        set((state) => ({
+          entries: state.entries.map((entry) => {
+            if (entry.id !== oldId) return entry;
+            return {
+              ...entry,
+              id: newId,
+            };
+          }),
+          activeEntryId:
+            state.activeEntryId === oldId ? newId : state.activeEntryId,
+        }));
       },
     }),
     {
