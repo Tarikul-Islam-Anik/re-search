@@ -1,8 +1,14 @@
 import { auth } from '@repo/auth';
 import { Card, CardContent } from '@repo/design-system/components/ui/card';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import type React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Sign in to your account',
+  description: 'Sign in to your account to continue',
+};
 
 const AuthenticationPageLayout = async ({
   children,

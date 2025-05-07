@@ -133,22 +133,6 @@ export default function OnboardingPage() {
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                control={form.control}
-                name="icon"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Icon (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="📚" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Add an emoji as an icon for your vault
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? 'Creating Vault...' : 'Create Vault & Continue'}
               </Button>
