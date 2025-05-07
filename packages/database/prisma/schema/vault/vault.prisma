@@ -13,4 +13,5 @@ model Vault {
   files      File[]
   references Reference[]
   journals   Journal[]
+  papers     Paper[]
 }

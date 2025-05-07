@@ -1,0 +1,11 @@
+model PaperContent {
+  id      String @id @default(cuid())
+  content String @db.Text
+
+  // Relations
+  paperId String @unique
+  paper   Paper  @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

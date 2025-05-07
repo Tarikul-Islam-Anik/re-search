@@ -12,6 +12,11 @@ model Paper {
   keywords String[]
   authors  Author[] @relation("PaperAuthors")
 
+  // Relations
+  vaultId      String?
+  vault        Vault?        @relation(fields: [vaultId], references: [id], onDelete: SetNull)
+  paperContent PaperContent?
+
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   paperStatus PaperStatus[]
